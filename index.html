@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROGRESS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-face/1.0.1/font-face.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- Background aurora effect -->
+    <div class="aurora-container">
+        <div class="aurora"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navbar">
+        <div class="logo" data-navigate="home">
+            PROGRESS
+            <div class="logo-gleam"></div>
+        </div>
+        <div class="nav-items">
+            <a href="javascript:void(0);" class="nav-item" data-navigate="about">About</a>
+            <a href="javascript:void(0);" class="nav-item" data-navigate="contact">Contact Us</a>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div id="home" class="page active-page">
+        <div class="content content-right hero-highlight-container">
+            <div class="block-title">Welcome to Progress</div>
+            <div class="text-block">
+                <span class="highlight-text active">A political party beyond left and right.</span><br>
+                A workshop in which the future of Britain is being built.<br>
+                A partnership of the able.
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="content content-left hero-highlight-container">
+            <div class="block-title">About Progress</div>
+            <div class="subtitle">Not too long ago…</div>
+            <div class="text-block">
+                …a group of people – software engineers, AI scientists, founders of successful companies, megaproject managers, university professors, healthcare specialists – came together <span class="highlight-text" id="highlight1">united by three common and uncontroversial beliefs</span>.
+                <br><br>
+                That Britain, one of the finest and most successful states ever to rise from the earth, was and is in terminal decline.
+                <br><br>
+                That this decline can be stopped, for Britain to move on to a level of success and stability beyond even what it has known historically.
+                <br><br>
+                <span class="highlight-text" id="highlight2">And that this decline must be stopped.</span>
+                <br><br>
+                Guided by these common beliefs, and being utterly unwilling to leave their fulfilment to chance, we put our hands together and formed the Progress party.
+                <br><br>
+                Progress is a party formed of and propelled by able, normal people with great records in building things and an intense contempt for generations of Westminster misgovernment. To the political elite, this makes us dangerous outsiders. If this is so, then we are honoured to bear the accusation.
+                <br><br>
+                <span class="highlight-text" id="highlight3">Our platform is simple, oriented around our vision of A Kingdom United.</span>
+                <br><br>
+                Economically, we believe in a Britain whose growth is propelled by cutting edge technology and high creativity. We believe in monumental reindustrialisation. We believe in a focus on skills and training for all, to create tracks to prosperity for everyone.
+                <br><br>
+                Socially, we believe that it should be the right of all people to walk down the street at night without fear of harm. We believe in a stance on white collar crime that is as firm as our stance on violent and petty crime. We believe in a multiracial monoculture, a nation defined not by cursory differences as abide between us, but by shared celebration of the classically British values that made this country the freest, fairest, and most successful in the world.
+                <br><br>
+                <span class="highlight-text" id="highlight4">And we believe above all in a state that serves its citizens.</span> In courts that serve the interests of the law-abiding, not the criminal. In a civil service that is lean, cost-effective and hyper-productive. In a crown jewel health service that provides for its people whenever they need it. In a political class that isn't bothered about the political left or the political right, but is defined only by its will, its skill, and its willingness to serve.
+                <br><br>
+                We are a party devoted to bringing about the glory of our name: <span class="highlight-text" id="highlight5">Progress, for one and all.</span> A party that believes in the heroism, rationality, and beauty of human beings. In the greatness of Britain, and of the British people. In the magnificence of our Common Law, which forms the heart of every constitution held close to the chests of all of the freest, most successful countries in the world.
+                <br><br>
+                A party that believes in the credo of "Always Better Today Than Yesterday."
+                <br><br>
+                A party that believes in its own almost-impossible mission – to win its first election not five years after being formed. It is a fundamentally unreasonable aim, but these are unreasonable times. The service of the people of Britain cannot wait any longer. And just as we believe that the answers to the questions facing the British people are within them, so do we believe that it is within us.
+                <br><br>
+                That, like all good things however unlikely, <span class="highlight-text" id="highlight6">It Can Be Done.</span>
+                <br><br>
+                <img src="assets/images/horse-emblem.png" alt="Whistlejacket emblem" class="horse-emblem">
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Us Page -->
+    <div id="contact" class="page">
+        <div class="content">
+            <div class="block-title">Be a Part of Progress</div>
+            <div class="text-block">
+                Britain will perish in decline unless people just like you decide that they will not have it happen. If you love your country, if you are desperate to see its fortunes improve, if you wish to create a great national inheritance to leave to all those who come after you, join us.
+                <br><br>
+                We will provide you with regular email updates about Progress' progress, with information about how to get involved.
+            </div>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" name="full-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">Town/City</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="occupation">Occupation</label>
+                    <input type="text" id="occupation" name="occupation" required>
+                </div>
+                <div class="form-group">
+                    <label for="contribution">How Would You Like to Contribute to Progress?</label>
+                    <div class="vanishing-input-container" id="vanishing-container">
+                        <textarea id="contribution" name="contribution" placeholder="To contribute to policy."></textarea>
+                        <canvas id="vanishing-canvas"></canvas>
+                    </div>
+                </div>
+                <button type="submit" class="button">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- NDA Form Page (not accessible from navbar) -->
+    <div id="nda" class="page">
+        <div class="nda-content">
+            <h2>Bletchley Point Ltd.</h2>
+            <h3>Confidentiality Agreement</h3>
+            <p>This confidentiality agreement (the "Agreement") is dated <span id="current-date"></span>.</p>
+            <p>The Agreement is to hold between Bletchley Point Ltd., and any future entity to which the venture in question may in future be renamed (the "Company"), represented by Maxi Gorynski [General Director], and <input type="text" id="new-member-name" placeholder="Your name"> (the "New Member").</p>
+
+            <h4>1. Non-Disclosure of Confidential Information</h4>
+            <p>By signing this confidentiality agreement, the New Member agrees to the following:</p>
+            <ol>
+                <li>They shall not copy, distribute, or otherwise disseminate any material belonging to the Company – inclusive of but not limited to documents, digital or material assets, logos, strategic plans, marketing materials, contact registers, software products, codebases, databases, communications logs, letters and correspondence, and financial information; they shall not do so orally, in writing, or by any other format</li>
+                <li>They shall not use or exploit any Confidential Information given to them in any way except for the Purpose;</li>
+                <li>They shall not utilise the Confidential Information to obtain any commercial or other form of strategic advantage over the Disclosing Party or to compete with it, directly or indirectly;</li>
+                <li>They shall not disclose or make available the Confidential Information to any third party, except as expressly permitted by this Agreement;</li>
+                <li>They shall not utilise the Confidential Information for any commercial reason, independently or in collaboration with any third party;</li>
+                <li>They shall not copy, reduce to writing or otherwise record the Confidential Information except as strictly necessary for the Purpose (and any such copies, reductions to writing and records shall be the property of the Disclosing Party); and</li>
+                <li>They shall apply the same security measures and degree of care to the Confidential Information as the Recipient applies to its own confidential information</li>
+            </ol>
+
+            <h4>2. Permitted Disclosure of Confidential Information</h4>
+            <p>The New Member may disclose the Disclosing Party's Confidential Information to those of its Representatives who need to know this Confidential Information for the Purpose, provided that:</p>
+            <ol>
+                <li>it informs its Representatives of the confidential nature of the Confidential Information, or the aspects of the Solution to be disclosed, before disclosure, and likewise obtains signed, written approval from the Disclosing Party for the Confidential Information to be disclosed;</li>
+                <li>It procures that its Representatives shall, in relation to any Confidential Information disclosed to them (or information shared as regards the Soluton), comply with this Agreement as if they were the Recipient and, if the Disclosing Party so requests, procure that any relevant Representative enters into a confidentiality agreement with the Disclosing Party on terms equivalent to those contained in this Agreement,</li>
+                <li>The Recipient may disclose Confidential Information, or information about the Solution, to the extent such Confidential Information is required:
+                    <ol>
+                        <li>to be disclosed by law, rule or regulation; or</li>
+                        <li>by any governmental, judicial or other regulatory authority (including, without limitation, any recognised stock exchange or by a court or other authority of competent jurisdiction),</li>
+                    </ol>
+                </li>
+            </ol>
+
+            <h4>3. Reservation of Rights and Acknowledgement</h4>
+            <ol>
+                <li>All Confidential Information shall remain the property of the Disclosing Party. The Disclosing Party reserves all rights in its Confidential Information. No rights, including, but not limited to, intellectual property rights, in respect of the Disclosing Party's Confidential Information are granted to the Recipient and no obligations are imposed on the Disclosing Party other than those expressly stated in this Agreement.</li>
+                <li>The disclosure of Confidential Information by the Disclosing Party shall not form any offer by, or representation or warranty on the part of, the Disclosing Party to enter into any further agreement in relation to the Purpose.</li>
+                <li>The Recipient acknowledges that damages alone would not be an adequate remedy for the breach of any of the provisions of this Agreement. Accordingly, without prejudice to any other rights and remedies it may have, the Disclosing Party shall be entitled to seek the granting of equitable relief (including without limitation injunctive relief) concerning any threatened or actual breach of any of the provisions of this Agreement.</li>
+                <li>If the Recipient has included a secondary name/handle at the head of this document (for example, a pseudonym/social media handle), then it shall also follow that the Company shall hold the Recipient's legal name as Confidential Information belonging to the Recipient and shall not reveal it, including if it is the Recipient's wish to any personnel outside of the Company's Heads of Function, unless compelled to do so by law.</li>
+            </ol>
+
+            <p>The obligations of each Party shall, notwithstanding any earlier termination of negotiations or discussions between the parties in relation to the Purpose, continue for in perpetuity from the date of this Agreement.</p>
+            <p>Any failure to exercise or any delay in exercising any right or remedy under this Agreement shall not constitute a waiver of that right or remedy or a waiver of any other right or remedy and no single or partial exercise of any right or remedy under this Agreement will prevent any further exercise of that right or remedy or the exercise of any other right or remedy.</p>
+            <p>No variation or agreed termination of this Agreement shall be of any force or effect unless in writing and signed by each Party.</p>
+
+            <div class="form-group">
+                <label>Signature of the New Member:</label>
+                <canvas id="signature-canvas" class="signature-canvas" width="400" height="100"></canvas>
+                <button type="button" class="button" id="clear-signature">Clear</button>
+            </div>
+
+            <div class="form-group">
+                <label for="signee-name">Name:</label>
+                <input type="text" id="signee-name" name="signee-name">
+            </div>
+
+            <div>
+                <p>Signature of the Representative of the Company</p>
+                <img src="assets/images/signature.png" alt="Maxi Gorynski Signature">
+                <p>Name: Maximillian 'Maxi' Gorynski</p>
+            </div>
+
+            <button type="button" class="button" id="submit-nda">Submit NDA</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/highlights.js"></script>
+    <script src="js/components/vanishing-input.js"></script>
+    <script src="js/pages/about.js"></script>
+    <script src="js/pages/contact.js"></script>
+    <script src="js/pages/nda.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+/* Text highlight effect */
+.highlight-text {
+    display: inline-block;
+    position: relative;
+    background-image: linear-gradient(to right, #B10024, #001A4F);
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding: 0 4px;
+    border-radius: 4px;
+    transition: background-size 2s ease;
+}
+
+.highlight-text.active {
+    background-size: 100% 100%;
+}
+
+/* Hero highlight container */
+.hero-highlight-container {
+    position: relative;
+    overflow: hidden;
+}

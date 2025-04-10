@@ -1,0 +1,55 @@
+/* NDA form styles */
+.nda-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.nda-content h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.nda-content h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.nda-content h4 {
+    font-size: 18px;
+    margin: 20px 0 10px 0;
+}
+
+.nda-content p {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.nda-content ol {
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+.nda-content ol li {
+    margin-bottom: 10px;
+}
+
+.nda-content ol ol {
+    list-style-type: lower-alpha;
+    margin: 10px 0;
+}
+
+.signature-canvas {
+    border: 1px solid #555;
+    background-color: #111;
+    margin-top: 5px;
+    width: 100%;
+    max-width: 400px;
+}
+
+#new-member-name {
+    display: inline-block;
+    width: auto;
+    min-width: 200px;
+    margin: 0 5px;
+}
