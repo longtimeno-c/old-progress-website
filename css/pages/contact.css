@@ -1,0 +1,35 @@
+/* Contact page styling */
+
+/* Make the vanishing input container match other input fields */
+#contact .vanishing-input-container {
+    background-color: #111 !important;
+    border: 1px solid #555;
+    border-radius: 4px;
+    box-shadow: none;
+    width: 100%;
+    display: block;
+}
+
+#contact .vanishing-input-container.has-value {
+    background-color: #111 !important;
+}
+
+#contact .vanishing-input-container textarea {
+    height: 80px;
+    padding: 8px;
+    font-size: inherit;
+    width: 100%;
+    background-color: transparent !important;
+    display: block;
+    box-sizing: border-box;
+}
+
+/* Ensure form layout is consistent */
+#contact .form-group {
+    margin-bottom: 20px;
+}
+
+/* Make buttons consistent */
+#contact .button {
+    margin-top: 10px;
+}

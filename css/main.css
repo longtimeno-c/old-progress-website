@@ -72,13 +72,20 @@ body {
     margin-bottom: 5px;
 }
 
-.form-group input, .form-group select {
+.form-group input, .form-group select, .form-group textarea {
     width: 100%;
     padding: 8px;
     border: 1px solid #555;
     background-color: #111;
     color: white;
     border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: vertical;
 }
 
 .button {
@@ -88,6 +95,7 @@ body {
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .button:hover {

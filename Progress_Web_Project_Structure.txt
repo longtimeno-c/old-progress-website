@@ -1,0 +1,32 @@
+progress-website/
+├── index.html             # Main HTML file
+├── assets/                # Static assets
+│   ├── images/            # Image files
+│   │   └── horse-emblem.png
+│   ├── fonts/             # Custom fonts (if any)
+│   └── favicon.ico        # Website favicon
+├── css/                   # CSS files
+│   ├── main.css           # Main stylesheet
+│   ├── components/        # Component-specific styles
+│   │   ├── aurora.css     # Aurora background effect
+│   │   ├── navigation.css # Navigation and logo
+│   │   ├── highlights.css # Text highlighting effects
+│   │   └── vanishing-input.css # Vanishing input component
+│   └── pages/             # Page-specific styles
+│       ├── home.css       # Home page styles
+│       ├── about.css      # About page styles
+│       ├── contact.css    # Contact page styles
+│       └── nda.css        # NDA form styles
+├── js/                    # JavaScript files
+│   ├── main.js            # Main JavaScript file
+│   ├── utils/             # Utility functions
+│   │   └── helpers.js     # Helper functions
+│   ├── components/        # Component-specific scripts
+│   │   ├── navigation.js  # Navigation functionality
+│   │   ├── highlights.js  # Text highlighting effects
+│   │   └── vanishing-input.js # Vanishing input component
+│   └── pages/             # Page-specific scripts
+│       ├── about.js       # About page functionality
+│       ├── contact.js     # Contact form handling
+│       └── nda.js         # NDA form functionality
+└── README.md              # Project documentation

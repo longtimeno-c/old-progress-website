@@ -1,0 +1,29 @@
+/* About page styling */
+
+/* Larger horse emblem in About page */
+#about .horse-emblem {
+    width: 100px;
+    height: auto;
+    margin-top: 20px;
+    display: block;
+}
+
+/* Background horse image for About page */
+#about {
+    position: relative;
+}
+
+#about::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../assets/images/whistlejacket.png');
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 50% auto;
+    opacity: 0.2;
+    z-index: -1;
+}
