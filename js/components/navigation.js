@@ -13,20 +13,6 @@ function initNavigation() {
             navigateToPage(pageId);
         });
     });
-
-    // Add hover effects to navigation items
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        item.addEventListener('mouseenter', function() {
-            activateNavItemGradient(this);
-        });
-
-        item.addEventListener('mouseleave', function() {
-            if (!this.classList.contains('active')) {
-                deactivateNavItemGradient(this);
-            }
-        });
-    });
 }
 
 /**
@@ -58,11 +44,13 @@ function navigateToPage(pageId) {
     document.querySelectorAll('.nav-item').forEach(navItem => {
         if (navItem.dataset.navigate === pageId) {
             navItem.classList.add('active');
-            activateNavItemGradient(navItem);
-        } else {
-            deactivateNavItemGradient(navItem);
         }
     });
+
+    // Update sparkles on active navigation item
+    if (window.updateActiveSparkles) {
+        window.updateActiveSparkles();
+    }
 
     // Reset scroll position
     window.scrollTo(0, 0);
@@ -76,20 +64,4 @@ function navigateToPage(pageId) {
     window.history.pushState(null, '', `#${pageId}`);
 
     return false;
-}
-
-/**
- * Activate the gradient effect on a navigation item
- * @param {HTMLElement} item - The navigation item to activate
- */
-function activateNavItemGradient(item) {
-    item.style.setProperty('--moving-gradient', 'radial-gradient(75% 181.16% at 50% 50%, #3275F8 0%, rgba(255, 255, 255, 0) 100%)');
-}
-
-/**
- * Deactivate the gradient effect on a navigation item
- * @param {HTMLElement} item - The navigation item to deactivate
- */
-function deactivateNavItemGradient(item) {
-    item.style.setProperty('--moving-gradient', 'radial-gradient(20.7% 50% at 50% 0%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%)');
 }

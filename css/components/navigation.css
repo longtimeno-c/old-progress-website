@@ -38,7 +38,7 @@
     gap: 20px;
 }
 
-/* Moving border gradient effect */
+/* Nav item basic styling */
 .nav-item {
     color: white;
     text-decoration: none;
@@ -46,90 +46,37 @@
     position: relative;
     cursor: pointer;
     border-radius: 20px;
-    overflow: hidden;
-    --angle: 0deg;
     background-color: rgba(0, 0, 0, 0.2);
-    transition: background-color 0.5s;
-    border: none;
+    transition: background-color 0.3s;
     z-index: 1;
-    margin: 1px;
 }
 
-.nav-item:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+.nav-item:hover, .nav-item.active {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
-.nav-item::before {
-    content: "";
+/* Sparkles styling */
+.sparkles-container {
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: radial-gradient(circle, #C8102E 10%, #C8102E00 20%),
-                 radial-gradient(circle at 40% 40%, #FFFFFF 5%, #FFFFFF00 15%),
-                 radial-gradient(circle at 60% 60%, #012169 10%, #01216900 20%),
-                 radial-gradient(circle at 40% 60%, #FFFFFF 10%, #FFFFFF00 20%),
-                 repeating-conic-gradient(
-                    from var(--angle) at 50% 50%,
-                    #C8102E 0%,
-                    #FFFFFF 25%,
-                    #012169 50%,
-                    #FFFFFF 75%,
-                    #C8102E 100%
-                 );
-    -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.3s;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 22px; /* Slightly larger than nav-item */
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
 }
 
-.nav-item:hover::before {
-    opacity: 1;
-}
-
-.nav-item.active::before {
-    opacity: 1;
-}
-
-.nav-item::after {
-    content: "";
+.sparkle {
     position: absolute;
-    inset: -2px;
-    border-radius: inherit;
-    background: var(--moving-gradient);
+    background-color: white;
+    border-radius: 50%;
+    width: var(--size, 2px);
+    height: var(--size, 2px);
+    top: var(--y, 50%);
+    left: var(--x, 50%);
     opacity: 0;
-    transition: opacity 0.3s;
-    z-index: -1;
-    filter: blur(2px);
-}
-
-.nav-item:hover::after {
-    opacity: 1;
-    animation: rotate-gradient 4s linear infinite;
-}
-
-.nav-item.active::after {
-    opacity: 1;
-    animation: rotate-gradient 4s linear infinite;
-}
-
-@keyframes rotate-gradient {
-    0% {
-        --moving-gradient: radial-gradient(20.7% 50% at 50% 0%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-    25% {
-        --moving-gradient: radial-gradient(16.6% 43.1% at 0% 50%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-    50% {
-        --moving-gradient: radial-gradient(20.7% 50% at 50% 100%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-    75% {
-        --moving-gradient: radial-gradient(16.2% 41.2% at 100% 50%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-    100% {
-        --moving-gradient: radial-gradient(20.7% 50% at 50% 0%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%);
-    }
+    animation: sparkle-fade var(--duration, 1s) infinite ease-in-out;
+    animation-delay: var(--delay, 0s);
 }
