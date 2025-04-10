@@ -8,9 +8,6 @@ let vanishingInputIntervalId = null;
  * Initialize the vanishing input component
  */
 function initVanishingInput() {
-    const container = document.getElementById('vanishing-container');
-    if (!container) return;
-
     const textarea = document.getElementById('contribution');
     if (!textarea) return;
 
@@ -19,6 +16,17 @@ function initVanishingInput() {
 
     let animating = false;
     let newDataRef = [];
+
+    // Position the canvas correctly
+    canvas.style.position = 'absolute';
+    canvas.style.top = '10%';
+    canvas.style.left = '12px';
+    canvas.style.transform = 'scale(0.5)';
+    canvas.style.transformOrigin = 'top left';
+    canvas.style.opacity = '0';
+    canvas.style.transition = 'opacity 0.3s';
+    canvas.style.zIndex = '1';
+    canvas.style.pointerEvents = 'none';
 
     // Placeholders to cycle through
     const placeholders = [
@@ -35,8 +43,9 @@ function initVanishingInput() {
     function cyclePlaceholders() {
         if (textarea.value) return;
 
-        // Fade out current placeholder
-        textarea.style.opacity = "0.5";
+        // Only fade the placeholder text, not the entire field
+        const currentOpacity = getComputedStyle(textarea).getPropertyValue('--placeholder-opacity') || '1';
+        textarea.style.setProperty('--placeholder-opacity', '0');
 
         setTimeout(() => {
             // Change placeholder text
@@ -44,12 +53,25 @@ function initVanishingInput() {
             textarea.placeholder = placeholders[currentPlaceholder];
 
             // Fade in new placeholder
-            textarea.style.opacity = "1";
+            setTimeout(() => {
+                textarea.style.setProperty('--placeholder-opacity', '1');
+            }, 50);
         }, 400);
     }
 
     // Set initial placeholder
     textarea.placeholder = placeholders[0];
+    textarea.style.setProperty('--placeholder-opacity', '1');
+
+    // Add custom CSS to textarea for placeholder opacity
+    const style = document.createElement('style');
+    style.textContent = `
+        #contribution::placeholder {
+            opacity: var(--placeholder-opacity, 1);
+            transition: opacity 0.3s ease;
+        }
+    `;
+    document.head.appendChild(style);
 
     // Start cycling placeholders
     vanishingInputIntervalId = setInterval(cyclePlaceholders, 3000);
@@ -158,8 +180,8 @@ function initVanishingInput() {
                     textarea.value = '';
                     textarea.classList.remove('animating');
                     canvas.classList.remove('active');
+                    canvas.style.opacity = '0';
                     animating = false;
-                    textarea.style.opacity = "1";
                 }
             });
         }
@@ -172,14 +194,6 @@ function initVanishingInput() {
      */
     textarea.addEventListener('input', function() {
         if (animating) return;
-
-        const hasValue = this.value.trim().length > 0;
-
-        if (hasValue) {
-            container.classList.add('has-value');
-        } else {
-            container.classList.remove('has-value');
-        }
     });
 
     /**
@@ -200,7 +214,8 @@ function initVanishingInput() {
 
         animating = true;
         textarea.classList.add('animating');
-        canvas.classList.add('active');
+        textarea.style.color = 'transparent';
+        canvas.style.opacity = '1';
 
         drawToCanvas();
 
@@ -209,6 +224,11 @@ function initVanishingInput() {
             current.x > max ? current.x : max, 0);
 
         animate(maxX);
+
+        // Reset text color after animation
+        setTimeout(() => {
+            textarea.style.color = 'white';
+        }, 2000);
     }
 
     /**

@@ -69,7 +69,8 @@ body {
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    font-weight: 500;
 }
 
 .form-group input, .form-group select, .form-group textarea {

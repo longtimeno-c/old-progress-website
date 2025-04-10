@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROgress</title>
+    <title>PROGRESS</title>
+    <link rel="icon" href="assets/images/whistlejacket.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-face/1.0.1/font-face.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -19,7 +20,7 @@
     <!-- Navigation -->
     <div class="navbar">
         <div class="logo" data-navigate="home">
-            PROgress
+            PROGRESS
             <div class="logo-gleam"></div>
         </div>
         <div class="nav-items">
@@ -35,7 +36,10 @@
             <div class="text-block">
                 <span class="highlight-text active">A political party beyond left and right.</span><br>
                 A workshop in which the future of Britain is being built.<br>
-                A partnership of the able.
+                A partnership of the able. <br><br><br><br>
+                Perhaps you hate politics. <br>
+                Perhaps you've always felt you could govern better than politicians can. <br>
+                We think you're right. And we're here to put you, the voter, back in the driving seat. <br>
             </div>
         </div>
     </div>
@@ -91,23 +95,31 @@
             <form id="contact-form">
                 <div class="form-group">
                     <label for="full-name">Full Name</label>
-                    <input type="text" id="full-name" name="full-name" required>
+                    <div class="input-glow-container">
+                        <input type="text" id="full-name" name="full-name" required>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required>
+                    <div class="input-glow-container">
+                        <input type="email" id="email" name="email" required>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="city">Town/City</label>
-                    <input type="text" id="city" name="city" required>
+                    <div class="input-glow-container">
+                        <input type="text" id="city" name="city" required>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="occupation">Occupation</label>
-                    <input type="text" id="occupation" name="occupation" required>
+                    <div class="input-glow-container">
+                        <input type="text" id="occupation" name="occupation" required>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="contribution">How Would You Like to Contribute to Progress?</label>
-                    <div class="vanishing-input-container" id="vanishing-container">
+                    <div class="input-glow-container">
                         <textarea id="contribution" name="contribution" placeholder="To contribute to policy."></textarea>
                         <canvas id="vanishing-canvas"></canvas>
                     </div>
