@@ -1,0 +1,20 @@
+{
+  "name": "progress-web",
+  "version": "1.0.0",
+  "description": "Progress Political Party Website",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'No build step needed'",
+    "start": "vercel dev"
+  },
+  "keywords": [
+    "progress",
+    "political",
+    "website"
+  ],
+  "author": "Maxi Gorynski",
+  "license": "ISC",
+  "dependencies": {
+    "googleapis": "^105.0.0"
+  }
+}
