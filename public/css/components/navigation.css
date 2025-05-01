@@ -1,0 +1,82 @@
+/* Navigation styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    position: relative;
+    letter-spacing: 1px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.logo-gleam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        transparent 45%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 55%,
+        transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmerAnimation 7s infinite;
+    mix-blend-mode: overlay;
+}
+
+/* Nav items */
+.nav-items {
+    display: flex;
+    gap: 20px;
+}
+
+/* Nav item basic styling */
+.nav-item {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    position: relative;
+    cursor: pointer;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+    z-index: 1;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Sparkles styling */
+.sparkles-container {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 22px; /* Slightly larger than nav-item */
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.sparkle {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    width: var(--size, 2px);
+    height: var(--size, 2px);
+    top: var(--y, 50%);
+    left: var(--x, 50%);
+    opacity: 0;
+    animation: sparkle-fade var(--duration, 1s) infinite ease-in-out;
+    animation-delay: var(--delay, 0s);
+}

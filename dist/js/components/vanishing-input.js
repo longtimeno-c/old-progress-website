@@ -2,18 +2,14 @@
  * Vanishing input functionality
  */
 
-let vanishingInputIntervalId = null;
-
-/**
- * Initialize the vanishing input component
- */
-function initVanishingInput() {
+export function initVanishingInput() {
     const textarea = document.getElementById('contribution');
     if (!textarea) return;
 
     const canvas = document.getElementById('vanishing-canvas');
     if (!canvas) return;
 
+    let vanishingInputIntervalId = null;
     let animating = false;
     let newDataRef = [];
 
@@ -44,7 +40,6 @@ function initVanishingInput() {
         if (textarea.value) return;
 
         // Only fade the placeholder text, not the entire field
-        const currentOpacity = getComputedStyle(textarea).getPropertyValue('--placeholder-opacity') || '1';
         textarea.style.setProperty('--placeholder-opacity', '0');
 
         setTimeout(() => {

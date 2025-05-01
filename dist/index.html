@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROGRESS</title>
-    <link rel="icon" href="assets/images/whistlejacket.png" type="image/png">
+    <link rel="icon" href="/public/images/whistlejacket.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-face/1.0.1/font-face.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- CSS Files -->
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="/dist/css/main.css">
 </head>
 <body>
     <!-- Background aurora effect -->
@@ -24,8 +24,8 @@
             <div class="logo-gleam"></div>
         </div>
         <div class="nav-items">
-            <a href="javascript:void(0);" class="nav-item" data-navigate="about">About</a>
-            <a href="javascript:void(0);" class="nav-item" data-navigate="contact">Contact Us</a>
+            <a href="#about" class="nav-item" data-navigate="about">About</a>
+            <a href="#contact" class="nav-item" data-navigate="contact">Contact Us</a>
         </div>
     </div>
 
@@ -78,7 +78,7 @@
                 <br><br>
                 That, like all good things however unlikely, <span class="highlight-text" id="highlight6">It Can Be Done.</span>
                 <br><br>
-                <img src="assets/images/whistlejacket.png" alt="Whistlejacket emblem" class="horse-emblem">
+                <img src="public/images/whistlejacket.png" alt="Whistlejacket emblem" class="horse-emblem">
             </div>
         </div>
     </div>
@@ -196,14 +196,14 @@
     </div>
 
     <!-- JavaScript Files -->
-    <script src="js/utils/helpers.js"></script>
-    <script src="js/components/sparkles.js"></script>
-    <script src="js/components/navigation.js"></script>
-    <script src="js/components/highlights.js"></script>
-    <script src="js/components/vanishing-input.js"></script>
-    <script src="js/pages/about.js"></script>
-    <script src="js/pages/contact.js"></script>
-    <script src="js/pages/nda.js"></script>
-    <script src="js/main.js"></script>
+    <script type="module" src="dist/js/utils/helpers.js"></script>
+    <script type="module" src="dist/js/components/sparkles.js"></script>
+    <script type="module" src="dist/js/components/navigation.js"></script>
+    <script type="module" src="dist/js/components/highlights.js"></script>
+    <script type="module" src="dist/js/components/vanishing-input.js"></script>
+    <script type="module" src="dist/js/pages/about.js"></script>
+    <script type="module" src="dist/js/pages/contact.js"></script>
+    <script type="module" src="dist/js/pages/nda.js"></script>
+    <script type="module" src="dist/js/main.js"></script>
 </body>
 </html>

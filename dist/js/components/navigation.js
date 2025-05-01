@@ -5,7 +5,7 @@
 /**
  * Initialize navigation functionality
  */
-function initNavigation() {
+export function initNavigation() {
     // Add event listeners to navigation items
     document.querySelectorAll('[data-navigate]').forEach(item => {
         item.addEventListener('click', function() {
@@ -19,7 +19,7 @@ function initNavigation() {
  * Navigate to the specified page
  * @param {string} pageId - ID of the page to navigate to
  */
-function navigateToPage(pageId) {
+export function navigateToPage(pageId) {
     // Validate the pageId exists
     const targetPage = document.getElementById(pageId);
     if (!targetPage) {

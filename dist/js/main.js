@@ -2,6 +2,9 @@
  * Main JavaScript file that initializes the application
  */
 
+import { initNavigation, navigateToPage } from './components/navigation.js';
+import { initVanishingInput } from './components/vanishing-input.js';
+
 // Initialize the application when the DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize navigation
@@ -33,13 +36,17 @@ function initActivePage() {
             document.querySelectorAll('.nav-item').forEach(navItem => {
                 if (navItem.dataset.navigate === visiblePageId) {
                     navItem.classList.add('active');
-                    activateNavItemGradient(navItem);
+                    if (typeof activateNavItemGradient === 'function') {
+                        activateNavItemGradient(navItem);
+                    }
                 }
             });
 
             // Initialize page-specific functionality
             if (visiblePageId === 'about') {
-                initAboutPage();
+                if (typeof initAboutPage === 'function') {
+                    initAboutPage();
+                }
             }
         }
     }

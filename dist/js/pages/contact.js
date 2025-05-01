@@ -1,7 +1,7 @@
 /**
  * Contact page functionality
  */
-import { submitToGoogleSheets } from '../utils/google-sheets-config.js';
+import { submitToGoogleSheets } from '../utils/google-sheet-config.js';
 
 // Initialize the contact form when the DOM is ready
 document.addEventListener('DOMContentLoaded', function() {

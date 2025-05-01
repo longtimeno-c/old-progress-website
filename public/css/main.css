@@ -1,0 +1,137 @@
+/* Main CSS file that imports all modularized CSS */
+
+/* Import component styles */
+@import 'components/aurora.css';
+@import 'components/navigation.css';
+@import 'components/highlights.css';
+@import 'components/vanishing-input.css';
+
+/* Import page-specific styles */
+@import 'pages/home.css';
+@import 'pages/about.css';
+@import 'pages/contact.css';
+@import 'pages/nda.css';
+
+/* Global styles */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Content containers */
+.content {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.content-right {
+    text-align: right;
+    margin-left: auto;
+}
+
+.content-left {
+    text-align: left;
+}
+
+.block-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.subtitle {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.text-block {
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.indented-text {
+    margin-left: 20px;
+}
+
+/* Form styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #555;
+    background-color: #111;
+    color: white;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.button:hover {
+    background-color: #444;
+}
+
+.horse-emblem {
+    width: 40px;
+    height: auto;
+    margin-top: 20px;
+}
+
+/* Page management */
+.page {
+    display: none;
+}
+
+.active-page {
+    display: block;
+}
+
+/* Animations */
+@keyframes shimmerAnimation {
+    0%, 85% { background-position: 200% 0; }
+    95% { background-position: -200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes sparkle-fade {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: var(--max-opacity, 0.7);
+        transform: scale(1);
+    }
+}
