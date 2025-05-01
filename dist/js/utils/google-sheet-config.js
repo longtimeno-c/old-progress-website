@@ -5,56 +5,66 @@ const GOOGLE_SHEETS_CONFIG = {
 };
 
 /**
- * Submit form data to Google Sheets
+ * Submit form data to Google Sheets using a hidden form submission approach
  * @param {Object} formData - Form submission data
  * @returns {Promise} - Resolves with submission result
  */
 async function submitToGoogleSheets(formData) {
-    try {
-        console.log('Submitting form data to Google Sheets:', formData);
+    return new Promise((resolve, reject) => {
+        try {
+            console.log('Submitting form data to Google Sheets:', formData);
 
-        // Use the current Vercel preview URL
-        const apiUrl = '/api/submit-to-sheets';;
-        console.log('Using API URL:', apiUrl);
+            // Using the Google Apps Script Web App URL
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbz9J7HZHJm3eN80QWMNq_0Vy_0JGgvTyGajnZ4K4c4SGFvYHHBG0Q9T4fL5Kuglez7EOw/exec';
 
-        const requestBody = {
-            sheetId: GOOGLE_SHEETS_CONFIG.SHEET_ID,
-            sheetName: GOOGLE_SHEETS_CONFIG.SHEET_NAME,
-            data: [
-                new Date().toISOString(), // Timestamp
-                formData.fullName,
-                formData.email,
-                formData.city,
-                formData.occupation,
-                formData.contribution
-            ]
-        };
+            // Create a hidden form to submit data (avoids CORS issues)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = scriptUrl;
+            form.style.display = 'none';
 
-        console.log('Request payload:', requestBody);
+            // Add form fields
+            const addField = (name, value) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = value;
+                form.appendChild(input);
+            };
 
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        });
+            // Add all the data fields
+            addField('sheetId', GOOGLE_SHEETS_CONFIG.SHEET_ID);
+            addField('sheetName', GOOGLE_SHEETS_CONFIG.SHEET_NAME);
+            addField('timestamp', new Date().toISOString());
+            addField('fullName', formData.fullName);
+            addField('email', formData.email);
+            addField('city', formData.city);
+            addField('occupation', formData.occupation);
+            addField('contribution', formData.contribution);
 
-        console.log('Response status:', response.status);
+            // Add success URL that will redirect back to our site
+            const successUrl = window.location.href.split('#')[0]; // Get current URL without hash
+            addField('successUrl', successUrl);
 
-        if (!response.ok) {
-            const errorBody = await response.text();
-            console.error('Error response body:', errorBody);
-            throw new Error(`Failed to submit to Google Sheets: ${errorBody}`);
+            // Append the form to the document
+            document.body.appendChild(form);
+
+            // Submit the form
+            form.submit();
+
+            // Since form submission will navigate away, we resolve immediately
+            resolve({ success: true, message: 'Form submitted successfully' });
+
+            // Clean up the form (though page will likely navigate away)
+            setTimeout(() => {
+                document.body.removeChild(form);
+            }, 1000);
+
+        } catch (error) {
+            console.error('Google Sheets submission error:', error);
+            reject(error);
         }
-
-        const result = await response.json();
-        console.log('Successful response:', result);
-        return result;
-    } catch (error) {
-        console.error('Google Sheets submission error:', error);
-        throw error;
-    }
+    });
 }
 
 export { GOOGLE_SHEETS_CONFIG, submitToGoogleSheets };

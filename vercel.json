@@ -20,6 +20,13 @@
       "destination": "/dist/$1"
     }
   ],
+  "redirects": [
+    {
+      "source": "/nda",
+      "destination": "/#nda",
+      "permanent": false
+    }
+  ],
   "headers": [
     {
       "source": "/js/(.*)",

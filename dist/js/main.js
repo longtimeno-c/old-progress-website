@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initActivePage() {
     // Check if URL has a fragment identifier for direct page access
     const hash = window.location.hash.substring(1);
+    console.log("Initial hash:", hash);
     if (hash) {
         navigateToPage(hash);
     } else {
