@@ -1,0 +1,230 @@
+function doPost(e) {
+  try {
+    // Parse the form data
+    const params = e.parameter;
+
+    // Check if this is a sheet submission or NDA submission
+    if (params.action === 'submitNDA') {
+      return handleNDASubmission(params);
+    } else {
+      return handleSheetSubmission(params);
+    }
+
+  } catch (error) {
+    // Return error response
+    return HtmlService.createHtmlOutput(
+      '<html><body><h1>Error</h1><p>' + error.toString() + '</p></body></html>'
+    );
+  }
+}
+
+function handleSheetSubmission(params) {
+  try {
+    // Open the spreadsheet
+    const spreadsheet = SpreadsheetApp.openById(params.sheetId);
+    let sheet = spreadsheet.getSheetByName(params.sheetName);
+
+    // If the sheet doesn't exist, create it
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet(params.sheetName);
+      sheet.appendRow(['Timestamp', 'Full Name', 'Email', 'City', 'Occupation', 'Contribution']);
+    }
+
+    // Append the new row
+    sheet.appendRow([
+      params.timestamp,
+      params.fullName,
+      params.email,
+      params.city,
+      params.occupation,
+      params.contribution
+    ]);
+
+    // Get success URL if provided
+    const successUrl = params.successUrl || '';
+
+    // Return HTML response with redirect
+    if (successUrl) {
+      return HtmlService.createHtmlOutput(
+        '<html><body>' +
+        '<p>Form submitted successfully! Redirecting back to the site...</p>' +
+        '<script>window.onload = function() { window.top.location.href = "' + successUrl + '"; };</script>' +
+        '</body></html>'
+      );
+    } else {
+      return HtmlService.createHtmlOutput(
+        '<html><body><h1>Success!</h1><p>Your form was submitted successfully.</p></body></html>'
+      );
+    }
+  } catch (error) {
+    return HtmlService.createHtmlOutput(
+      '<html><body><h1>Error</h1><p>' + error.toString() + '</p></body></html>'
+    );
+  }
+}
+
+function handleNDASubmission(params) {
+  try {
+    // Extract NDA data
+    const name = params.name;
+    const email = params.email;
+    const company = params.company || 'Not provided';
+    const date = params.date;
+    const signature = params.signature;
+    const adminEmail = params.adminEmail;
+
+    // Create PDF blob
+    const pdfBlob = createNDAPdf(name, email, company, date, signature);
+
+    // Send email with PDF attachment
+    sendNDAEmail(adminEmail, name, email, company, pdfBlob);
+
+    // Get success URL if provided
+    const successUrl = params.successUrl || '';
+
+    // Return HTML response with redirect
+    if (successUrl) {
+      return HtmlService.createHtmlOutput(
+        '<html><body>' +
+        '<p>NDA submitted successfully! Redirecting back to the site...</p>' +
+        '<script>window.onload = function() { ' +
+        'alert("NDA submitted successfully. A copy has been sent to the administrators.");' +
+        'window.top.location.href = "' + successUrl + '"; };</script>' +
+        '</body></html>'
+      );
+    } else {
+      return HtmlService.createHtmlOutput(
+        '<html><body><h1>Success!</h1><p>Your NDA was submitted successfully.</p></body></html>'
+      );
+    }
+  } catch (error) {
+    return HtmlService.createHtmlOutput(
+      '<html><body><h1>Error</h1><p>' + error.toString() + '</p></body></html>'
+    );
+  }
+}
+
+function createNDAPdf(name, email, company, date, signatureData) {
+  // Create a Google Doc first (easier to format than direct PDF)
+  const doc = DocumentApp.create('NDA_' + name + '_' + date);
+  const body = doc.getBody();
+
+  // Add header
+  body.appendParagraph('PROGRESS POLITICAL PARTY')
+      .setHeading(DocumentApp.ParagraphHeading.HEADING1)
+      .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  body.appendParagraph('NON-DISCLOSURE AGREEMENT')
+      .setHeading(DocumentApp.ParagraphHeading.HEADING2)
+      .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  // Add NDA text (simplified version - replace with your actual NDA text)
+  body.appendParagraph('\nThis Non-Disclosure Agreement ("Agreement") is entered into by and between Progress Political Party ("Disclosing Party") and the undersigned individual ("Receiving Party").')
+      .setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);
+
+  body.appendParagraph('\n1. CONFIDENTIAL INFORMATION: "Confidential Information" includes any proprietary information, technical data, trade secrets, know-how, research, product plans, products, services, customer lists, markets, software, developments, inventions, processes, formulas, technology, designs, drawings, engineering, hardware configuration, marketing materials, finances, or other business information disclosed to Receiving Party by Disclosing Party either directly or indirectly.')
+      .setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);
+
+  body.appendParagraph('\n2. RECEIVING PARTY OBLIGATIONS: Receiving Party agrees to hold all Confidential Information in strict confidence and not to disclose such Confidential Information to any third parties. Receiving Party shall protect such information with at least the same degree of care as it would protect its own confidential information.')
+      .setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);
+
+  // Add more NDA clauses here as needed
+
+  // Add signature section
+  body.appendParagraph('\n\nIN WITNESS WHEREOF, the parties hereto have executed this Non-Disclosure Agreement as of the date written below.')
+      .setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);
+
+  // Add signee information
+  body.appendParagraph('\n\nRECEIVING PARTY:')
+      .setBold(true);
+
+  body.appendParagraph('\nName: ' + name);
+  body.appendParagraph('Email: ' + email);
+  body.appendParagraph('Company: ' + company);
+  body.appendParagraph('Date: ' + date);
+
+  // Signature handling
+  body.appendParagraph('\nSignature:');
+
+  // Convert base64 image to blob and insert
+  if (signatureData && signatureData.indexOf('base64') > -1) {
+    const signatureBlob = getBlobFromBase64(signatureData);
+    // Temporarily save to Drive to get as image
+    const file = DriveApp.createFile(signatureBlob);
+    const image = body.appendImage(file.getBlob());
+    image.setHeight(60);
+    file.setTrashed(true); // Clean up the temporary file
+  } else {
+    body.appendParagraph('[Signature not provided]');
+  }
+
+  // Save and close the document
+  doc.saveAndClose();
+
+  // Get as PDF
+  const pdfBlob = DriveApp.getFileById(doc.getId()).getAs('application/pdf');
+  pdfBlob.setName('NDA_' + name + '_' + date + '.pdf');
+
+  // Trash the original doc (keep it clean)
+  DriveApp.getFileById(doc.getId()).setTrashed(true);
+
+  return pdfBlob;
+}
+
+function getBlobFromBase64(base64Data) {
+  // Remove the prefix if present (e.g., "data:image/png;base64,")
+  const split = base64Data.split(',');
+  const base64 = split.length > 1 ? split[1] : split[0];
+
+  // Decode base64 data to bytes
+  const decoded = Utilities.base64Decode(base64);
+
+  // Get mime type
+  let mimeType = 'image/png'; // Default
+  if (split.length > 1 && split[0].indexOf('image/') > -1) {
+    mimeType = split[0].split(':')[1].split(';')[0];
+  }
+
+  // Create blob
+  return Utilities.newBlob(decoded, mimeType, 'signature.png');
+}
+
+function sendNDAEmail(adminEmail, name, email, company, pdfBlob) {
+  // Compose email
+  const subject = 'New NDA Submission: ' + name;
+  const body =
+      'A new NDA has been submitted with the following details:\n\n' +
+      'Name: ' + name + '\n' +
+      'Email: ' + email + '\n' +
+      'Company: ' + company + '\n' +
+      'Date: ' + new Date().toDateString() + '\n\n' +
+      'The signed NDA document is attached to this email.\n\n' +
+      'This is an automated message from the Progress Political Party website.';
+
+  // Send email with PDF attachment
+  GmailApp.sendEmail(
+    adminEmail,
+    subject,
+    body,
+    {
+      attachments: [pdfBlob],
+      name: 'Progress Political Party'
+    }
+  );
+}
+
+// For handling OPTIONS request (CORS)
+function doOptions(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(30000);
+
+  var headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400'
+  };
+
+  return ContentService.createTextOutput().setMimeType(ContentService.MimeType.JSON)
+    .setHeaders(headers);
+}

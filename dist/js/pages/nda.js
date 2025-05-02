@@ -86,13 +86,13 @@ export function initNDASubmission() {
     const submitButton = document.getElementById('submit-nda');
     if (!submitButton) return;
 
-    submitButton.addEventListener('click', async function() {
+    submitButton.addEventListener('click', function() {
         const canvas = document.getElementById('signature-canvas');
         if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
         const name = document.getElementById('signee-name')?.value;
-        const email = document.getElementById('signee-email')?.value; // Make sure this matches the ID in your HTML
+        const email = document.getElementById('signee-email')?.value;
         const company = document.getElementById('signee-company')?.value;
 
         // Validate form fields
@@ -120,50 +120,22 @@ export function initNDASubmission() {
             submitButton.disabled = true;
             submitButton.textContent = 'Submitting...';
 
-            // Get signature as base64 image
-            const signatureImage = canvas.toDataURL('image/png');
+            // Use your working deployment URL
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx0js7jO_HczbvKGAfABRbUVm9lKqAaG6sqYowG-gx85PW6cfrVKfwzeJI16TT1t669ZA/exec';
 
-            // Get the current date
-            const currentDate = new Date().toISOString().split('T')[0];
+            // Build URL with query parameters
+            const params = new URLSearchParams({
+                'action': 'submitNDA',
+                'name': name,
+                'email': email,
+                'company': company || 'Not provided',
+                'date': new Date().toISOString().split('T')[0],
+                'adminEmail': 'maxgorynski@gmail.com',
+                'successUrl': window.location.href.split('#')[0]
+            });
 
-            // Send data to Google Apps Script to generate PDF and send email
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbyW3j2ol9xektJ1vbVy0MlzqlXV3VMp3_s7l2sLqwf5VmjWvJO5y1lwrpqeMcSOkloPxQ/exec';
-
-            // Create a hidden form to submit data (avoids CORS issues)
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = scriptUrl;
-            form.style.display = 'none';
-
-            // Add form fields
-            const addField = (name, value) => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = name;
-                input.value = value;
-                form.appendChild(input);
-            };
-
-            // Add all the data fields
-            addField('action', 'submitNDA');
-            addField('name', name);
-            addField('email', email);
-            addField('company', company || 'Not provided');
-            addField('date', currentDate);
-            addField('signature', signatureImage);
-            addField('adminEmail', 'maxgorynski@gmail.com'); // This ensures the PDF goes to the correct email
-
-            // Add success URL that will redirect back to our site
-            const successUrl = window.location.href.split('#')[0]; // Get current URL without hash
-            addField('successUrl', successUrl);
-
-            // Append the form to the document
-            document.body.appendChild(form);
-
-            // Submit the form
-            form.submit();
-
-            // Alert will be shown when redirected back
+            // Navigate to the URL - this will open in the same tab
+            window.location.href = `${scriptUrl}?${params.toString()}`;
 
         } catch (error) {
             console.error('NDA submission error:', error);

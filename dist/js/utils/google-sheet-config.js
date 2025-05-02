@@ -15,7 +15,7 @@ async function submitToGoogleSheets(formData) {
             console.log('Submitting form data to Google Sheets:', formData);
 
             // Using the Google Apps Script Web App URL
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbz9J7HZHJm3eN80QWMNq_0Vy_0JGgvTyGajnZ4K4c4SGFvYHHBG0Q9T4fL5Kuglez7EOw/exec';
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx0js7jO_HczbvKGAfABRbUVm9lKqAaG6sqYowG-gx85PW6cfrVKfwzeJI16TT1t669ZA/exec';
 
             // Create a hidden form to submit data (avoids CORS issues)
             const form = document.createElement('form');
