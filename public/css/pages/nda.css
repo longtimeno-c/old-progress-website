@@ -53,3 +53,24 @@
     min-width: 200px;
     margin: 0 5px;
 }
+
+/* Clear signature button positioning */
+#clear-signature {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px; /* Match the width of signature canvas */
+    align-self: flex-start; /* Align to the left side like the canvas */
+}
+
+#clear-signature.button {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+#clear-signature.button:hover {
+    background-color: #555;
+}
