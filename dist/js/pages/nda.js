@@ -120,22 +120,43 @@ export function initNDASubmission() {
             submitButton.disabled = true;
             submitButton.textContent = 'Submitting...';
 
-            // Use your working deployment URL
+            // Get the current date
+            const currentDate = new Date().toISOString().split('T')[0];
+
+            // Get signature as base64 image
+            const signatureImage = canvas.toDataURL('image/png');
+
+            // Using the Google Apps Script Web App URL
             const scriptUrl = 'https://script.google.com/macros/s/AKfycbx0js7jO_HczbvKGAfABRbUVm9lKqAaG6sqYowG-gx85PW6cfrVKfwzeJI16TT1t669ZA/exec';
 
-            // Build URL with query parameters
+            // Build URL with query parameters (without signature - it will be too large)
             const params = new URLSearchParams({
                 'action': 'submitNDA',
                 'name': name,
                 'email': email,
                 'company': company || 'Not provided',
-                'date': new Date().toISOString().split('T')[0],
-                'adminEmail': 'maxgorynski@gmail.com',
-                'successUrl': window.location.href.split('#')[0]
+                'date': currentDate,
+                'successUrl': window.location.pathname // Use just the path for better redirect
             });
 
-            // Navigate to the URL - this will open in the same tab
-            window.location.href = `${scriptUrl}?${params.toString()}`;
+            // Create a hidden form to submit the data including the signature
+            const form = document.createElement('form');
+            form.method = 'POST'; // Use POST for the signature data which can be large
+            form.action = scriptUrl + '?' + params.toString(); // Append other params to URL
+            form.style.display = 'none';
+
+            // Add signature field
+            const signatureInput = document.createElement('input');
+            signatureInput.type = 'hidden';
+            signatureInput.name = 'signature';
+            signatureInput.value = signatureImage;
+            form.appendChild(signatureInput);
+
+            // Append form to document
+            document.body.appendChild(form);
+
+            // Submit the form
+            form.submit();
 
         } catch (error) {
             console.error('NDA submission error:', error);

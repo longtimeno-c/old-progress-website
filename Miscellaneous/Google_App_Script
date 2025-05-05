@@ -57,67 +57,100 @@ function doGet(e) {
 // This function will be triggered by a time-based trigger
 function processNDAQueue() {
   try {
+    Logger.log("Starting to process NDA queue");
+
     // Open the spreadsheet
     const spreadsheet = SpreadsheetApp.openById('1BDp1gaKEGyBH4Ljj0JjNfZ6EtmM9CykFF3kdbElKlnQ');
+    Logger.log("Successfully opened spreadsheet");
 
-    // Get or create queue sheet
-    let queueSheet = spreadsheet.getSheetByName('NDA Queue') || spreadsheet.insertSheet('NDA Queue');
+    // Get queue sheet
+    let queueSheet = spreadsheet.getSheetByName('NDA Queue');
+    if (!queueSheet) {
+      Logger.log("NDA Queue sheet not found");
+      return;
+    }
+    Logger.log("Found NDA Queue sheet");
 
     // Get or create submissions sheet
     let submissionsSheet = spreadsheet.getSheetByName('NDA Submissions') || spreadsheet.insertSheet('NDA Submissions');
     if (submissionsSheet.getLastRow() === 0) {
       submissionsSheet.appendRow(['Timestamp', 'Name', 'Email', 'Company', 'Date Signed', 'PDF Sent']);
+      Logger.log("Created headers in NDA Submissions sheet");
     }
 
     // Get data from queue
     const queueData = queueSheet.getDataRange().getValues();
-    if (queueData.length <= 1) return; // No data or just headers
+    Logger.log("Queue data rows: " + queueData.length);
+
+    if (queueData.length <= 1) {
+      Logger.log("No data to process in queue (only headers or empty)");
+      return;
+    }
+
+    // Log the data for debugging
+    Logger.log("Queue data: " + JSON.stringify(queueData));
 
     // Process each row in the queue
     for (let i = 1; i < queueData.length; i++) {
       const row = queueData[i];
-      const timestamp = row[0];
-      const name = row[1];
-      const email = row[2];
-      const company = row[3];
-      const date = row[4];
+      Logger.log("Processing row " + i + ": " + JSON.stringify(row));
 
-      // Create PDF
-      const pdfBlob = createNDAPdf(name, email, company, date);
+      // Extract data from the row
+      const timestamp = row[0] || new Date().toISOString();
+      const name = row[1] || "Unknown";
+      const email = row[2] || "no-email@example.com";
+      const company = row[3] || "Not provided";
+      const date = row[4] || new Date().toISOString().split('T')[0];
 
-      // Send email
-      const subject = 'New NDA Submission: ' + name;
-      const body =
-          'A new NDA has been submitted with the following details:\n\n' +
-          'Name: ' + name + '\n' +
-          'Email: ' + email + '\n' +
-          'Company: ' + company + '\n' +
-          'Date: ' + date + '\n\n' +
-          'The user has electronically signed the NDA.\n' +
-          'The signed NDA document is attached to this email.\n\n' +
-          'This is an automated message from the Progress Political Party website.';
+      Logger.log("Extracted data - Name: " + name + ", Email: " + email);
 
-      GmailApp.sendEmail(
-        'maxgorynski@gmail.com',
-        subject,
-        body,
-        {
-          attachments: [pdfBlob],
-          name: 'Progress Political Party'
-        }
-      );
+      try {
+        // Create PDF
+        Logger.log("Creating PDF for: " + name);
+        const pdfBlob = createNDAPdf(name, email, company, date);
+        Logger.log("PDF created successfully");
 
-      // Add to submissions sheet
-      submissionsSheet.appendRow([timestamp, name, email, company, date, 'Yes']);
+        // Send email
+        Logger.log("Sending email to: maxgorynski@gmail.com");
+        const subject = 'New NDA Submission: ' + name;
+        const body =
+            'A new NDA has been submitted with the following details:\n\n' +
+            'Name: ' + name + '\n' +
+            'Email: ' + email + '\n' +
+            'Company: ' + company + '\n' +
+            'Date: ' + date + '\n\n' +
+            'The user has electronically signed the NDA.\n' +
+            'The signed NDA document is attached to this email.\n\n' +
+            'This is an automated message from the Progress Political Party website.';
+
+        GmailApp.sendEmail(
+          'maxgorynski@gmail.com',
+          subject,
+          body,
+          {
+            attachments: [pdfBlob],
+            name: 'Progress Political Party'
+          }
+        );
+        Logger.log("Email sent successfully");
+
+        // Add to submissions sheet
+        submissionsSheet.appendRow([timestamp, name, email, company, date, 'Yes']);
+        Logger.log("Added to submissions sheet");
+      } catch (rowError) {
+        Logger.log("Error processing row " + i + ": " + rowError.toString());
+      }
     }
 
     // Clear the queue after processing
+    Logger.log("Clearing queue sheet");
     queueSheet.clear();
     queueSheet.appendRow(['Timestamp', 'Name', 'Email', 'Company', 'Date']);
 
     Logger.log('Processed ' + (queueData.length - 1) + ' NDA submissions');
   } catch (error) {
     Logger.log('Error processing NDA queue: ' + error.toString());
+    Logger.log('Stack trace: ' + error.stack);
   }
 }
 
