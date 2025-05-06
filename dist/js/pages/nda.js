@@ -127,7 +127,7 @@ export function initNDASubmission() {
             const signatureImage = canvas.toDataURL('image/png');
 
             // Using the Google Apps Script Web App URL
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx0js7jO_HczbvKGAfABRbUVm9lKqAaG6sqYowG-gx85PW6cfrVKfwzeJI16TT1t669ZA/exec';
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbz8fC1laKSPixqpFU9C9PFkHp332uwcXSGxiLAqoB8MZT5TpsYlmTHMeKi5l3OIFIEd6A/exec';
 
             // Build URL with query parameters (without signature - it will be too large)
             const params = new URLSearchParams({
@@ -136,7 +136,7 @@ export function initNDASubmission() {
                 'email': email,
                 'company': company || 'Not provided',
                 'date': currentDate,
-                'successUrl': window.location.pathname // Use just the path for better redirect
+                'successUrl': window.location.origin + '/#success?type=nda' // Use just the path for better redirect
             });
 
             // Create a hidden form to submit the data including the signature

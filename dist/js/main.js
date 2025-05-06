@@ -4,7 +4,8 @@
 
 import { initNavigation, navigateToPage } from './components/navigation.js';
 import { initVanishingInput } from './components/vanishing-input.js';
-import { initAboutPage } from './pages/about.js'; // Add this import
+import { initAboutPage } from './pages/about.js';
+import { initSuccessPage } from './pages/form-success.js';
 
 // Initialize the application when the DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -28,6 +29,15 @@ function initActivePage() {
     // Check if URL has a fragment identifier for direct page access
     const hash = window.location.hash.substring(1);
     console.log("Initial hash:", hash);
+
+    // Check if this is a success page with parameters
+    const successPageRegex = /^success(\?.*)?$/;
+    if (hash.match(successPageRegex)) {
+        navigateToPage('success');
+        initSuccessPage();
+        return;
+    }
+
     if (hash) {
         navigateToPage(hash);
     } else {
@@ -46,7 +56,9 @@ function initActivePage() {
 
             // Initialize page-specific functionality
             if (visiblePageId === 'about') {
-                initAboutPage(); // Now this will work because we imported it
+                initAboutPage();
+            } else if (visiblePageId === 'success') {
+                initSuccessPage();
             }
         }
     }

@@ -38,11 +38,14 @@ function initContactForm() {
             if (contributionTextarea &&
                 contributionTextarea.value.trim() &&
                 !contributionTextarea.classList.contains('animating')) {
-                window.vanishAndSubmit(this);
+                // Use vanishing effect and then redirect
+                window.vanishAndSubmit(this, function() {
+                    // After vanishing animation completes, redirect to success page
+                    window.location.href = '/#success?type=contact';
+                });
             } else {
-                // Standard submission
-                alert('Your information has been submitted. Thank you for your interest in Progress!');
-                this.reset();
+                // Standard submission - redirect to success page
+                window.location.href = '/#success?type=contact';
             }
         } catch (error) {
             alert('There was an error submitting your information. Please try again.');
