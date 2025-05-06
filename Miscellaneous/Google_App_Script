@@ -12,6 +12,7 @@ function doGet(e) {
       const email = e.parameter.email;
       const company = e.parameter.company || 'Not provided';
       const date = e.parameter.date;
+      const signature = e.parameter.signature || null; // May be null for GET requests
 
       // Open the spreadsheet
       const spreadsheet = SpreadsheetApp.openById('1BDp1gaKEGyBH4Ljj0JjNfZ6EtmM9CykFF3kdbElKlnQ');
@@ -19,11 +20,24 @@ function doGet(e) {
       // Get or create queue sheet
       let queueSheet = spreadsheet.getSheetByName('NDA Queue') || spreadsheet.insertSheet('NDA Queue');
       if (queueSheet.getLastRow() === 0) {
-        queueSheet.appendRow(['Timestamp', 'Name', 'Email', 'Company', 'Date']);
+        queueSheet.appendRow(['Timestamp', 'Name', 'Email', 'Company', 'Date', 'Has Signature']);
       }
 
       // Add to queue
-      queueSheet.appendRow([new Date().toISOString(), name, email, company, date]);
+      queueSheet.appendRow([
+        new Date().toISOString(),
+        name,
+        email,
+        company,
+        date,
+        signature ? 'Yes' : 'No'
+      ]);
+
+      // Store signature in Properties if present
+      if (signature) {
+        const scriptProperties = PropertiesService.getScriptProperties();
+        scriptProperties.setProperty('signature_' + name + '_' + date, signature);
+      }
 
       // Get success URL if provided
       const successUrl = e.parameter.successUrl || '';
@@ -49,9 +63,6 @@ function doGet(e) {
       );
     }
   }
-
-  // Default response for GET requests
-  return HtmlService.createHtmlOutput("API endpoint working");
 }
 
 // This function will be triggered by a time-based trigger
@@ -87,8 +98,8 @@ function processNDAQueue() {
       return;
     }
 
-    // Log the data for debugging
-    Logger.log("Queue data: " + JSON.stringify(queueData));
+    // Get script properties for signatures
+    const scriptProperties = PropertiesService.getScriptProperties();
 
     // Process each row in the queue
     for (let i = 1; i < queueData.length; i++) {
@@ -105,9 +116,12 @@ function processNDAQueue() {
       Logger.log("Extracted data - Name: " + name + ", Email: " + email);
 
       try {
+        // Get signature from properties
+        const signatureBase64 = scriptProperties.getProperty('signature_' + name + '_' + date);
+
         // Create PDF
         Logger.log("Creating PDF for: " + name);
-        const pdfBlob = createNDAPdf(name, email, company, date);
+        const pdfBlob = createNDAPdf(name, email, company, date, signatureBase64);
         Logger.log("PDF created successfully");
 
         // Send email
@@ -137,6 +151,9 @@ function processNDAQueue() {
         // Add to submissions sheet
         submissionsSheet.appendRow([timestamp, name, email, company, date, 'Yes']);
         Logger.log("Added to submissions sheet");
+
+        // Clean up signature from properties
+        scriptProperties.deleteProperty('signature_' + name + '_' + date);
       } catch (rowError) {
         Logger.log("Error processing row " + i + ": " + rowError.toString());
       }
@@ -145,7 +162,7 @@ function processNDAQueue() {
     // Clear the queue after processing
     Logger.log("Clearing queue sheet");
     queueSheet.clear();
-    queueSheet.appendRow(['Timestamp', 'Name', 'Email', 'Company', 'Date']);
+    queueSheet.appendRow(['Timestamp', 'Name', 'Email', 'Company', 'Date', 'Has Signature']);
 
     Logger.log('Processed ' + (queueData.length - 1) + ' NDA submissions');
   } catch (error) {
@@ -247,7 +264,7 @@ function createNDAPdf(name, email, company, date) {
     body.appendParagraph('Email: ' + email);
     body.appendParagraph('Company: ' + company);
     body.appendParagraph('Date: ' + date);
-    body.appendParagraph('Signature: [Electronically Signed]');
+    body.appendParagraph('\nSignature: [Electronically Signed via Web Form]');
 
     body.appendParagraph('\nDISCLOSING PARTY:')
         .setBold(true);
@@ -280,43 +297,114 @@ function createNDAPdf(name, email, company, date) {
   }
 }
 
-// Contact Form Handling Functions
+function getBlobFromBase64(base64Data) {
+  try {
+    // Remove the prefix if present (e.g., "data:image/png;base64,")
+    const split = base64Data.split(',');
+    const base64 = split.length > 1 ? split[1] : split[0];
+
+    // Decode base64 data to bytes
+    const decoded = Utilities.base64Decode(base64);
+
+    // Get mime type
+    let mimeType = 'image/png'; // Default
+    if (split.length > 1 && split[0].indexOf('image/') > -1) {
+      mimeType = split[0].split(':')[1].split(';')[0];
+    }
+
+    // Create blob
+    return Utilities.newBlob(decoded, mimeType, 'signature.png');
+  } catch (error) {
+    Logger.log("Error processing base64 image: " + error.toString());
+    throw error;
+  }
+}
+
 function doPost(e) {
   try {
-    // Log the received data for debugging
     Logger.log("doPost called with data: " + JSON.stringify(e));
 
-    // Check if data was received
-    if (!e || !e.parameter) {
-      return ContentService.createTextOutput(JSON.stringify({
-        'success': false,
-        'message': 'No data received'
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+    // First, check if this appears to be an NDA submission by looking for the signature
+    // AND checking the 'action' parameter
+    if (e.parameters && e.parameters.signature &&
+        e.queryString && e.queryString.includes('action=submitNDA')) {
+
+      Logger.log("Detected NDA submission with signature");
+
+      const signature = e.parameters.signature[0];
+
+      // Parse query string into parameters
+      const queryString = e.queryString;
+      const params = {};
+      queryString.split('&').forEach(function(pair) {
+        const parts = pair.split('=');
+        if (parts.length === 2) {
+          params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+        }
+      });
+
+      // Extract NDA data
+      const name = params.name;
+      const email = params.email;
+      const company = params.company || 'Not provided';
+      const date = params.date;
+
+      Logger.log("Processing NDA for: " + name + ", " + email);
+
+      // Store signature in Properties
+      const scriptProperties = PropertiesService.getScriptProperties();
+      scriptProperties.setProperty('signature_' + name + '_' + date, signature);
+
+      // Open the spreadsheet - SPECIFICALLY THE NDA QUEUE
+      const spreadsheet = SpreadsheetApp.openById('1BDp1gaKEGyBH4Ljj0JjNfZ6EtmM9CykFF3kdbElKlnQ');
+
+      // Get or create NDA queue sheet
+      let queueSheet = spreadsheet.getSheetByName('NDA Queue') || spreadsheet.insertSheet('NDA Queue');
+      if (queueSheet.getLastRow() === 0) {
+        queueSheet.appendRow(['Timestamp', 'Name', 'Email', 'Company', 'Date', 'Has Signature']);
+      }
+
+      // Add to NDA queue
+      queueSheet.appendRow([
+        new Date().toISOString(),
+        name,
+        email,
+        company,
+        date,
+        'Yes'
+      ]);
+
+      Logger.log("Successfully added to NDA Queue");
+
+      // Get success URL if provided
+      const successUrl = params.successUrl || '';
+
+      // Return success page with redirect
+      if (successUrl) {
+        return HtmlService.createHtmlOutput(
+          '<html><body>' +
+          '<h1>NDA Submitted Successfully</h1>' +
+          '<p>Your NDA has been submitted. Thank you!</p>' +
+          '<script>setTimeout(function() { window.location.href = "' + successUrl + '"; }, 3000);</script>' +
+          '</body></html>'
+        );
+      } else {
+        return HtmlService.createHtmlOutput(
+          '<html><body><h1>Success!</h1><p>Your NDA was submitted successfully.</p></body></html>'
+        );
+      }
     }
-
-    // Parse the form data
-    const params = e.parameter;
-
-    // Check if this is a sheet submission or NDA submission
-    if (params.action === 'submitNDA') {
-      return handleNDASubmission(params);
-    } else if (params.action === 'submitContact') {
-      return handleSheetSubmission(params);
-    } else {
-      // Default sheet submission (backwards compatible)
-      return handleSheetSubmission(params);
+    // If we get here, it's not an NDA submission, so handle it as a contact form
+    else {
+      Logger.log("This is not an NDA submission, treating as contact form");
+      return handleSheetSubmission(e.parameter);
     }
-
   } catch (error) {
     Logger.log("Error in doPost: " + error.toString());
-
     // Return error response
-    return ContentService.createTextOutput(JSON.stringify({
-      'success': false,
-      'message': 'Error: ' + error.toString()
-    }))
-    .setMimeType(ContentService.MimeType.JSON);
+    return HtmlService.createHtmlOutput(
+      '<html><body><h1>Error</h1><p>' + error.toString() + '</p></body></html>'
+    );
   }
 }
 
