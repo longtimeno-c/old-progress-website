@@ -5,7 +5,8 @@
 /**
  * Initialize highlights on the About page
  */
-function initAboutHighlights() {
+export function initAboutHighlights() {
+    console.log("Initializing highlights");
     const highlightElements = [
         document.getElementById('highlight1'),
         document.getElementById('highlight2'),
@@ -15,11 +16,14 @@ function initAboutHighlights() {
         document.getElementById('highlight6')
     ];
 
+    console.log("Found highlight elements:", highlightElements);
+
     // Activate highlights with a staggered animation
     highlightElements.forEach((element, index) => {
         if (element) {
             setTimeout(() => {
                 element.classList.add('active');
+                console.log(`Activated highlight ${index + 1}`);
             }, index * 500);
         }
     });

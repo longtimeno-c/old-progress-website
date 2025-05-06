@@ -4,6 +4,7 @@
 
 import { initNavigation, navigateToPage } from './components/navigation.js';
 import { initVanishingInput } from './components/vanishing-input.js';
+import { initAboutPage } from './pages/about.js'; // Add this import
 
 // Initialize the application when the DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -45,9 +46,7 @@ function initActivePage() {
 
             // Initialize page-specific functionality
             if (visiblePageId === 'about') {
-                if (typeof initAboutPage === 'function') {
-                    initAboutPage();
-                }
+                initAboutPage(); // Now this will work because we imported it
             }
         }
     }
