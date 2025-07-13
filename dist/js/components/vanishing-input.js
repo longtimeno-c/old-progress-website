@@ -230,15 +230,21 @@ export function initVanishingInput() {
      * Submit form with vanishing animation
      * @param {HTMLFormElement} form - The form to submit
      */
-    window.vanishAndSubmit = function(form) {
+    window.vanishAndSubmit = function(form, callback) {
         if (!textarea.value.trim() || animating) return;
 
         vanishText();
 
-        // Submit the form after animation completes
+        // Submit the form or execute callback after animation completes
         setTimeout(() => {
-            alert('Your information has been submitted. Thank you for your interest in Progress!');
-            form.reset();
+            if (typeof callback === 'function') {
+                // Execute the callback if provided
+                callback();
+            } else {
+                // Default behavior if no callback provided
+                alert('Your information has been submitted. Thank you for your interest in Progress!');
+                form.reset();
+            }
         }, 2000);
     };
 

@@ -29,6 +29,13 @@ function initContactForm() {
         };
 
         try {
+            // Disable the submit button
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Submitting...';
+            }
+
             // Submit to Google Sheets via backend
             await submitToGoogleSheets(formData);
 
@@ -37,10 +44,11 @@ function initContactForm() {
 
             if (contributionTextarea &&
                 contributionTextarea.value.trim() &&
+                window.vanishAndSubmit &&
                 !contributionTextarea.classList.contains('animating')) {
-                // Use vanishing effect and then redirect
-                window.vanishAndSubmit(this, function() {
-                    // After vanishing animation completes, redirect to success page
+
+                // Use vanishing effect with a callback to redirect after animation
+                window.vanishAndSubmit(contactForm, function() {
                     window.location.href = '/#success?type=contact';
                 });
             } else {
@@ -50,6 +58,13 @@ function initContactForm() {
         } catch (error) {
             alert('There was an error submitting your information. Please try again.');
             console.error('Submission error:', error);
+
+            // Re-enable the submit button on error
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit';
+            }
         }
     });
 }

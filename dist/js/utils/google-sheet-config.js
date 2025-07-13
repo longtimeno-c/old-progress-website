@@ -33,6 +33,7 @@ async function submitToGoogleSheets(formData) {
             };
 
             // Add all the data fields
+            addField('action', 'submitContact');
             addField('sheetId', GOOGLE_SHEETS_CONFIG.SHEET_ID);
             addField('sheetName', GOOGLE_SHEETS_CONFIG.SHEET_NAME);
             addField('timestamp', new Date().toISOString());
@@ -42,8 +43,8 @@ async function submitToGoogleSheets(formData) {
             addField('occupation', formData.occupation);
             addField('contribution', formData.contribution);
 
-            // Add success URL that will redirect back to our site
-            const successUrl = window.location.href.split('#')[0]; // Get current URL without hash
+            // Add success URL that will redirect to our success page
+            const successUrl = window.location.origin + '/#success?type=contact';
             addField('successUrl', successUrl);
 
             // Append the form to the document
