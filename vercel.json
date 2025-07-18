@@ -24,6 +24,10 @@
       "destination": "/public/images/$1"
     },
     {
+      "source": "/should-i-join-progress.pdf",
+      "destination": "/public/should-i-join-progress.pdf"
+    },
+    {
       "source": "/(.*)",
       "destination": "/dist/$1"
     }
